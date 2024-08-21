@@ -25,8 +25,8 @@ def generate_outputs(prompt, n):
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": prompt}
             ],
-            temperature: 0.7,
-            max_lenght: 30,
+            temperature= 0.7,
+            max_lenght= 30,
             n=n
         )
         return [choice.message.content for choice in response.choices]
