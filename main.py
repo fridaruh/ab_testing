@@ -22,11 +22,10 @@ def generate_outputs(prompt, n):
         response = client.chat.completions.create(
             model="gpt-4o-mini",  
             messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "system", "content": "You are a helpful assistant, generate responses in less than 50 words."},
                 {"role": "user", "content": prompt}
             ],
             temperature= 0.7,
-            max_tokens=200,  # Add this line to limit the output to 20 tokens
             n=n
         )
         return [choice.message.content for choice in response.choices]
