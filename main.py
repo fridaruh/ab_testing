@@ -31,7 +31,7 @@ def generate_single_output(prompt, max_retries=5, initial_delay=1):
             check_quota(estimated_tokens)
             
             response = client.chat.completions.create(
-                model="gpt-3.5-turbo",  # Usar un modelo más económico
+                model="gpt-4o-mini",  # Usar un modelo más económico
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant."},
                     {"role": "user", "content": prompt}
