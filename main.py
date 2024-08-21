@@ -25,6 +25,10 @@ def generate_outputs(prompt, n):
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": prompt}
             ],
+            usage= [
+            "prompt_tokens": 13,
+            "completion_tokens": 7,
+            "total_tokens": 20]
             temperature= 0.7,
             n=n
         )
