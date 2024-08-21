@@ -26,7 +26,7 @@ def generate_outputs(prompt, n):
                 {"role": "user", "content": prompt}
             ],
             temperature= 0.7,
-            max_tokens=20,  # Add this line to limit the output to 20 tokens
+            max_tokens=200,  # Add this line to limit the output to 20 tokens
             n=n
         )
         return [choice.message.content for choice in response.choices]
