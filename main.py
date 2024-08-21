@@ -1,6 +1,7 @@
 import streamlit as st
 from openai import OpenAI
 import random
+import time
 
 # Streamlit app
 st.title('OpenAI A/B Testing Tool')
@@ -13,25 +14,30 @@ prompt_a = st.text_area('Enter Prompt A')
 prompt_b = st.text_area('Enter Prompt B')
 
 # Number of outputs per prompt
-num_outputs = st.number_input('Number of outputs per prompt', min_value=1, max_value=10, value=5)
+num_outputs = st.number_input('Number of outputs per prompt', min_value=1, max_value=10, value=2)
 
-# Function to generate a single output
-def generate_single_output(prompt):
+# Function to generate a single output with error handling and retries
+def generate_single_output(prompt, max_retries=3):
     client = OpenAI(api_key=api_key)
-    try:
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",  
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.7,
-            n=1
-        )
-        return response.choices[0].message.content
-    except Exception as e:
-        st.error(f"An error occurred: {str(e)}")
-        return None
+    for attempt in range(max_retries):
+        try:
+            response = client.chat.completions.create(
+                model="gpt-4o-mini", 
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.7,
+                n=1
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            st.warning(f"Attempt {attempt + 1} failed: {str(e)}")
+            if attempt < max_retries - 1:
+                time.sleep(2)  # Wait for 2 seconds before retrying
+            else:
+                st.error(f"Failed to generate output after {max_retries} attempts.")
+                return None
 
 # Function to generate multiple outputs
 def generate_outputs(prompt, n):
@@ -40,6 +46,7 @@ def generate_outputs(prompt, n):
         output = generate_single_output(prompt + " En menos de 50 palabras.")
         if output:
             outputs.append(output)
+        time.sleep(1)  # Add a small delay between API calls
     return outputs
 
 # Button to run the test
