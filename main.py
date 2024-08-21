@@ -15,23 +15,32 @@ prompt_b = st.text_area('Enter Prompt B')
 # Number of outputs per prompt
 num_outputs = st.number_input('Number of outputs per prompt', min_value=1, max_value=10, value=5)
 
-# Function to generate outputs
-def generate_outputs(prompt, n):
+# Function to generate a single output
+def generate_single_output(prompt):
     client = OpenAI(api_key=api_key)
     try:
         response = client.chat.completions.create(
-            model="gpt-4o-mini",  
+            model="gpt-4-turbo-preview",  
             messages=[
-                {"role": "system", "content": "You are a helpful assistant, generate responses in less than 50 words."},
+                {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
-            n=n
+            n=1
         )
-        return [choice.message.content for choice in response.choices]
+        return response.choices[0].message.content
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
-        return []
+        return None
+
+# Function to generate multiple outputs
+def generate_outputs(prompt, n):
+    outputs = []
+    for _ in range(n):
+        output = generate_single_output(prompt + " En menos de 50 palabras.")
+        if output:
+            outputs.append(output)
+    return outputs
 
 # Button to run the test
 if st.button('Run Test'):
