@@ -20,7 +20,7 @@ def generate_outputs(prompt, n):
     client = OpenAI(api_key=api_key)
     try:
         response = client.chat.completions.create(
-            model="gpt-4-turbo-preview",  
+            model="gpt-4o-mini",  
             messages=[
                 {"role": "system", "content": "You are a helpful assistant, generate responses in less than 50 words."},
                 {"role": "user", "content": prompt}
