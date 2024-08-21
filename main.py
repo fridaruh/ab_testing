@@ -1,5 +1,5 @@
 import streamlit as st
-import openai
+from openai import OpenAI
 import random
 
 # Streamlit app
@@ -17,10 +17,10 @@ num_outputs = st.number_input('Number of outputs per prompt', min_value=1, max_v
 
 # Function to generate outputs
 def generate_outputs(prompt, n):
-    openai.api_key = api_key
+    client = OpenAI(api_key=api_key)
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4o-mini",
+        response = client.chat.completions.create(
+            model="gpt-4",  # Changed from "gpt-4o-mini" to "gpt-4"
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": prompt}
